@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import scaffoldConfig from "~~/scaffold.config";
+import { HackathonEntry } from "~~/types/dbSchema";
 import { ChainWithAttributes } from "~~/utils/scaffold-eth";
 
 /**
@@ -16,9 +17,14 @@ type GlobalState = {
   setNativeCurrencyPrice: (newNativeCurrencyPriceState: number) => void;
   targetNetwork: ChainWithAttributes;
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => void;
+  hackathonEntries: HackathonEntry[];
+  setHackathonEntries: (newHackathonEntries: HackathonEntry[]) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
+  hackathonEntries: [],
+  setHackathonEntries: (newHackathonEntries: HackathonEntry[]) =>
+    set(() => ({ hackathonEntries: newHackathonEntries })),
   nativeCurrencyPrice: 0,
   setNativeCurrencyPrice: (newValue: number): void => set(() => ({ nativeCurrencyPrice: newValue })),
   targetNetwork: scaffoldConfig.targetNetworks[0],
