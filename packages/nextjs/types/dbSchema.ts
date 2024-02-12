@@ -3,6 +3,7 @@ export type HackathonEntry = {
   projectName: string;
   problemStatement: string;
   solutionDescription: string;
+  implementationDescription: string;
   technologyStack: string[];
   teamMembers: TeamMember[];
   coherenceScore: number;
