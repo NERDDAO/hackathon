@@ -1,3 +1,5 @@
+"use client";
+
 import { HackathonEntry, TeamMember } from "~~/types/dbSchema";
 
 interface HackathonProjectAttributes {
