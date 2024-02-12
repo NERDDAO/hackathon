@@ -138,6 +138,9 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "439860a0df546d1b",
-  "lastOpenFiles": []
+  "active": "1f5584d7649e80aa",
+  "lastOpenFiles": [
+    "Hackatool",
+    "packages/nextjs/tsconfig.tsbuildinfo"
+  ]
 }
