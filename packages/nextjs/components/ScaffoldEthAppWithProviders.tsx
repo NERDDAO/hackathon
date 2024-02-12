@@ -13,14 +13,19 @@ import { useDarkMode } from "~~/hooks/scaffold-eth/useDarkMode";
 import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
+import { HackathonEntry } from "~~/types/dbSchema";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   const price = useNativeCurrencyPrice();
   const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
-
+  const setHackathonEntries = useGlobalState(state => state.setHackathonEntries);
+  const he = [] as HackathonEntry[];
+  const state = useGlobalState(state => state.hackathonEntries);
   useEffect(() => {
     if (price > 0) {
       setNativeCurrencyPrice(price);
+      setHackathonEntries(he);
+      console.log(state);
     }
   }, [setNativeCurrencyPrice, price]);
 
