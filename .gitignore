@@ -12,3 +12,9 @@ node_modules
 .vscode/**
 .DS_Store
 .obsidian/*
+
+
+
+
+# Ignore Smart Connections folder
+.smart-connections
