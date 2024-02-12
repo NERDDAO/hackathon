@@ -11,7 +11,7 @@ export type HackathonEntry = {
 };
 
 // Team Member
-type TeamMember = {
+export type TeamMember = {
   name: string;
   email: string;
   role: string;
