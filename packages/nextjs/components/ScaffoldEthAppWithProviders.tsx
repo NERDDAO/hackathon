@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
 import { Toaster } from "react-hot-toast";
 import { WagmiConfig } from "wagmi";
@@ -14,46 +14,71 @@ import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
 import { HackathonEntry } from "~~/types/dbSchema";
+//import { EAS } from "@ethereum-attestation-service/eas-sdk";
+
+const useHasHydrated = () => {
+    const [hasHydrated, setHasHydrated] = useState<boolean>(false);
+
+    useEffect(() => {
+        setHasHydrated(true);
+    }, []);
+
+    return hasHydrated;
+};
+
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
-  const price = useNativeCurrencyPrice();
-  const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
-  const setHackathonEntries = useGlobalState(state => state.setHackathonEntries);
-  const he = [] as HackathonEntry[];
-  const state = useGlobalState(state => state.hackathonEntries);
-  useEffect(() => {
-    if (price > 0) {
-      setNativeCurrencyPrice(price);
-      setHackathonEntries(he);
-      console.log(state);
-    }
-  }, [setNativeCurrencyPrice, price]);
+    const price = useNativeCurrencyPrice();
+    const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
+    const setHackathonEntries = useGlobalState(state => state.setHackathonEntries);
+    const he = [] as HackathonEntry[];
+    const state = useGlobalState(state => state.hackathonEntries);
+    useEffect(() => {
+        if (price > 0) {
+            setNativeCurrencyPrice(price);
+            setHackathonEntries(he);
+            console.log(state);
+        }
+    }, [setNativeCurrencyPrice, price]);
 
-  return (
-    <>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="relative flex flex-col flex-1">{children}</main>
-        <Footer />
-      </div>
-      <Toaster />
-    </>
-  );
+    return (
+        <>
+            <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="relative flex flex-col flex-1">{children}</main>
+                <Footer />
+            </div>
+            <Toaster />
+        </>
+    );
 };
 
 export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
-  const { isDarkMode } = useDarkMode();
+    const { isDarkMode } = useDarkMode();
+    const fetchDb = async () => {
+        try {
+            const response = await fetch("/api/mongo"); // assume the same host
 
-  return (
-    <WagmiConfig config={wagmiConfig}>
-      <ProgressBar />
-      <RainbowKitProvider
-        chains={appChains.chains}
-        avatar={BlockieAvatar}
-        theme={isDarkMode ? darkTheme() : lightTheme()}
-      >
-        <ScaffoldEthApp>{children}</ScaffoldEthApp>
-      </RainbowKitProvider>
-    </WagmiConfig>
-  );
+            console.log(response, "Roys from DB");
+        } catch (e: any) {
+            console.log(e.message, "Error fetching player data from DB");
+        }
+    };
+
+    useEffect(() => {
+        fetchDb();
+    }, []);
+
+    return (
+        <WagmiConfig config={wagmiConfig}>
+            <ProgressBar />
+            <RainbowKitProvider
+                chains={appChains.chains}
+                avatar={BlockieAvatar}
+                theme={isDarkMode ? darkTheme() : lightTheme()}
+            >
+                <ScaffoldEthApp>{children}</ScaffoldEthApp>
+            </RainbowKitProvider>
+        </WagmiConfig>
+    );
 };
