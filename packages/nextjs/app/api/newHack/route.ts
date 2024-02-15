@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
 // Assuming we've defined or imported types for the Hackathon Application
+//
+
 import type { HackathonEntry } from "~~/types/dbSchema";
 
 // Assumed environme
 import { MongoDBAtlasVectorSearch, VectorStoreIndex, storageContextFromDefaults, Document } from "llamaindex";
 import { MongoClient } from "mongodb";
 
-
+import { ChatMessage, MessageContent, OpenAI, serviceContextFromDefaults } from "llamaindex";
+import { createChatEngine } from "../chat/engine";
 
 const url = 'mongodb+srv://At0x:r8MzJR2r4A1xlMOA@cluster1.upfglfg.mongodb.net/?retryWrites=true&w=majority'
 
@@ -42,51 +44,63 @@ async function llamaindex(payload: string, id: string) {
 
 // Revised function suited for hackathon application data
 async function generateHackathonProposal(hackathonApp: HackathonEntry) {
-    const openai = new OpenAI({
-        apiKey: process.env.OPENAI_AUTH_TOKEN,
-    });
-
     const messages: any[] = [
         {
             role: "system",
-            content: `You are an AI consultant specializing in hackathon project conceptualization. Given a project name, problem statement, solution description, and technology stack, generate an enhanced project proposal. Focus on elaborating the solution, suggesting improvements, and identifying potential challenges. Reply in JSON format using the HackathonEntry schema.`,
+            content: `You are an AI consultant specializing in hackathon project conceptualization. Given a project name, problem statement, solution description, and technology stack, Ponder on the different aspects of the presented project and give a score for each domain. Use the evaluationRemarks to appraise the projects and compare them to each other. Reply in JSON format using the Eval type.`,
         },
         {
             role: "assistant",
             content: `
-                type HackathonEntry = {
-  projectId: ${hackathonApp.projectId};
-  projectName: ${hackathonApp.projectName};
-  projectname: ${hackathonApp.projectName}
-  problemStatement: ${hackathonApp.problemStatement}
-  solutionDescription: ${hackathonApp.solutionDescription}
-  technologyStack: ${hackathonApp.technologyStack.join(", ")}
-  teamMembers: ${hackathonApp.teamMembers};
-  coherenceScore: number;
-  evaluationRemarks: string;
+              type Eval = {
+         coherenceScore: number;
+         feasabilityScore: number;
+         innovationScore: number;
+         funScore: number;
+         evaluationRemarks: string;
                 }
             `,
         },
         {
             role: "user",
-            content: `Review the hackathon entry, assign a coherence score and provide evaluation remarks.
-Project Name: ${hackathonApp.projectName}
-Problem Statement: ${hackathonApp.problemStatement}
-Solution Description: ${hackathonApp.solutionDescription}
-Technology Stack: ${hackathonApp.technologyStack.join(", ")}
+            content: `Review the hackathon entry, assign scores and provide evaluation remarks.
+  projectId: ${hackathonApp.projectId};
+  projectName: ${hackathonApp.hack.projectName};
+  problemStatement: ${hackathonApp.hack.problemStatement}
+  solutionDescription: ${hackathonApp.hack.solutionDescription}
+  technologyStack: ${hackathonApp.hack.technologyStack.join(", ")}
             `,
         },
     ];
 
-    const stream = await openai.chat.completions.create({
-        model: "gpt-4-1106-preview", // Ensure you're using the correct and available model
-        messages: messages,
-        response_format: { type: "json_object" },
-        temperature: 0.5,
+    const llm = new OpenAI({
+        model: (process.env.MODEL as any) ?? "gpt-4-0125-preview",
+        maxTokens: 512,
+        additionalChatOptions: { response_format: { type: "json_object" } },
     });
 
-    const rawOutput = stream.choices[0].message.content;
-    return rawOutput?.trim();
+    const serviceContext = serviceContextFromDefaults({
+        llm,
+        chunkSize: 512,
+        chunkOverlap: 20,
+    });
+
+
+    const chatEngine = await createChatEngine(
+        serviceContext,
+    );
+    if (!chatEngine) return NextResponse.json({ error: "datasource is required in the request body" }, { status: 400 });
+
+    // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
+
+
+    const response = await chatEngine.chat({
+        message: "Evaluate the hackathon entry and provide scores and remarks.",
+        chatHistory: messages,
+    });
+
+    const rawOutput = response.response;
+    return rawOutput;
 }
 
 // Example usage for POST handler or another part of your application
@@ -104,13 +118,17 @@ export async function POST(request: Request) {
 
     // assumed input
 
-    llamaindex(JSON.stringify(enhancedProposal), hackathonApp.projectId);//should we modify this id?
+    llamaindex(JSON.stringify(enhancedProposal + hackathonApp), hackathonApp.projectId);//should we modify this id?
 
     await hackCodex.updateOne(
-        { _id: hackathonApp.projectId },
+        {
+            _id: hackathonApp.projectId,
+            address: hackathonApp.address,
+            hack: hackathonApp.hack
+        },
         {
             $addToSet: {
-                hack: JSON.parse(enhancedProposal || "{}"),
+                eval: enhancedProposal,
             }
         },
         { upsert: true },// this creates new document if none match the filter

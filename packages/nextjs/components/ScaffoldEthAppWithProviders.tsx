@@ -55,20 +55,6 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
 export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
     const { isDarkMode } = useDarkMode();
-    const fetchDb = async () => {
-        try {
-            const response = await fetch("/api/mongo"); // assume the same host
-
-            console.log(response, "Roys from DB");
-        } catch (e: any) {
-            console.log(e.message, "Error fetching player data from DB");
-        }
-    };
-
-    useEffect(() => {
-        fetchDb();
-    }, []);
-
     return (
         <WagmiConfig config={wagmiConfig}>
             <ProgressBar />

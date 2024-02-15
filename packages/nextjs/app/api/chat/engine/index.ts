@@ -1,4 +1,4 @@
-import { LLM, ServiceContext, ContextChatEngine } from "llamaindex";
+import { LLM, ServiceContext, ContextChatEngine, ContextSystemPrompt } from "llamaindex";
 import { getDataSource } from "../datasource";
 
 

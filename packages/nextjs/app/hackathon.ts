@@ -1,75 +1,61 @@
 "use client";
 
 import { toast } from "react-hot-toast";
-import { HackathonEntry, TeamMember } from "~~/types/dbSchema";
-import { useGlobalState } from "~~/services/store/store"
-
-interface HackathonProjectAttributes {
-    projectName: string;
-    problemStatement: string;
-    solutionDescription: string;
-    implementationDescription: string;
-    technologyStack: string[];
-    teamMembers: TeamMember[];
-}
+import { AIEvaluation, HackathonEntry, TeamMember, HackathonProjectAttributes } from "~~/types/dbSchema";
 
 export class hackathonEntry {
+    address: string;
     projectId: string;
-    attributes: HackathonProjectAttributes;
-    coherenceScore: number;
-    evaluationRemarks: string;
+    hack: HackathonProjectAttributes;
+    evals: AIEvaluation[];
+    teamMembers: TeamMember[];
 
     constructor(
+        address: string,
         projectId: string,
         attributes: Partial<HackathonProjectAttributes>,
-        coherenceScore = 0,
-        evaluationRemarks = "",
+        teamMembers?: TeamMember[],
     ) {
+        this.address = address;
         this.projectId = projectId;
-        this.attributes = {
+        this.hack = {
             projectName: attributes.projectName ?? "",
             problemStatement: attributes.problemStatement ?? "",
             solutionDescription: attributes.solutionDescription ?? "",
             technologyStack: attributes.technologyStack ?? [],
-            teamMembers: attributes.teamMembers ?? [],
             implementationDescription: attributes.implementationDescription ?? "",
         };
-        this.coherenceScore = coherenceScore;
-        this.evaluationRemarks = evaluationRemarks;
+        this.teamMembers = teamMembers ?? [],
+            this.evals = [];
     }
 
     // Function to add a member to the project
     addTeamMember(member: TeamMember): void {
-        this.attributes.teamMembers.push(member);
+        this.teamMembers.push(member);
     }
 
     // Function to update the coherence score and evaluation remarks
-    evaluateProject(coherenceScore: number, evaluationRemarks: string): void {
-        this.coherenceScore = coherenceScore;
-        this.evaluationRemarks = evaluationRemarks;
+    evaluateProject(aiEval: AIEvaluation): void {
+        this.evals.push(aiEval);
     }
 
     // Get project information
     getProjectInfo(): HackathonEntry {
         return {
+            address: this.address,
             projectId: this.projectId,
-            projectName: this.attributes.projectName,
-            problemStatement: this.attributes.problemStatement,
-            solutionDescription: this.attributes.solutionDescription,
-            technologyStack: this.attributes.technologyStack,
-            teamMembers: this.attributes.teamMembers,
-            coherenceScore: this.coherenceScore,
-            evaluationRemarks: this.evaluationRemarks,
-            implementationDescription: this.attributes.implementationDescription,
+            hack: this.hack,
+            teamMembers: this.teamMembers,
+            evals: this.evals
         };
     }
 }
 
 
-export async function createHackathonEntry(projectData: Partial<HackathonProjectAttributes>): Promise<hackathonEntry> {
+export async function createHackathonEntry(address: string, projectData: Partial<HackathonProjectAttributes>, teamMembers?: TeamMember[]): Promise<hackathonEntry> {
     // Mimic an asynchronous operation, for example, saving to a database
     const projectId = Math.random().toString(36).substring(2); // Generate a simple unique identifier
-    const newProject = new hackathonEntry(projectId, projectData);
+    const newProject = new hackathonEntry(address, projectId, projectData, teamMembers);
     const response = await fetch("/api/newHack", {
         method: "POST",
         headers: {
@@ -81,7 +67,8 @@ export async function createHackathonEntry(projectData: Partial<HackathonProject
 
 
     console.log("rawResponse", r);
-    const parsed: HackathonEntry = JSON.parse(r);
+    const parsed: AIEvaluation = JSON.parse(r);
+    newProject.evaluateProject(parsed)
     toast.success(`"${parsed} has been created"`); // Include database save operation here if needed
     return newProject;
 }

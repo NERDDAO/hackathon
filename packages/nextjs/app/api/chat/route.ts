@@ -41,9 +41,20 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        const systemMessage: ChatMessage = {
+            role: "system",
+            content: `You are an AI consultant specializing in hackathon project conceptualization. Ponder on the different aspects of the projects available and help coordinate the hackers to build something interesting.`,
+        }
+
+        messages.push(systemMessage);
+
+
+
+
+
         const llm = new OpenAI({
-            model: (process.env.MODEL as any) ?? "gpt-3.5-turbo",
-            maxTokens: 512,
+            model: (process.env.MODEL as any) ?? "gpt-4-0125-preview",
+            maxTokens: 2512,
         });
 
         const serviceContext = serviceContextFromDefaults({
