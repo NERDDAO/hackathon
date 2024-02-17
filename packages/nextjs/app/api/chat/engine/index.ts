@@ -9,7 +9,7 @@ export async function createChatEngine(
     const index = await getDataSource(serviceContext);
 
     const retriever = index!.asRetriever();
-    retriever.similarityTopK = 5;
+    retriever.similarityTopK = 15;
     return new ContextChatEngine({
         chatModel: serviceContext.llm,
         retriever,

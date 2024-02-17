@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 // Assuming we've defined or imported types for the Hackathon Application
 //
 
-import type { HackathonEntry } from "~~/types/dbSchema";
+import type { AIEvaluation, HackathonEntry } from "~~/types/dbSchema";
 
 // Assumed environme
 import { MongoDBAtlasVectorSearch, VectorStoreIndex, storageContextFromDefaults, Document } from "llamaindex";
@@ -44,15 +44,15 @@ async function llamaindex(payload: string, id: string) {
 
 // Revised function suited for hackathon application data
 async function generateHackathonProposal(hackathonApp: HackathonEntry) {
-    const messages: any[] = [
+    const messages: ChatMessage[] = [
         {
             role: "system",
-            content: `You are an AI consultant specializing in hackathon project conceptualization. Given a project name, problem statement, solution description, and technology stack, Ponder on the different aspects of the presented project and give a score for each domain. Use the evaluationRemarks to appraise the projects and compare them to each other. Reply in JSON format using the Eval type.`,
+            content: `You are an AI consultant specializing in hackathon project conceptualization. Given a project name, problem statement, solution description, and technology stack, Ponder on the different aspects of the presented project and give a score for each domain. Use the evaluationRemarks to appraise the projects and compare them to each other. Reply in JSON format using the AIEvaluation type.`,
         },
         {
             role: "assistant",
             content: `
-              type Eval = {
+            type AIEvaluation = {
          coherenceScore: number;
          feasabilityScore: number;
          innovationScore: number;
@@ -64,7 +64,7 @@ async function generateHackathonProposal(hackathonApp: HackathonEntry) {
         {
             role: "user",
             content: `Review the hackathon entry, assign scores and provide evaluation remarks.
-  projectId: ${hackathonApp.projectId};
+  _id: ${hackathonApp._id};
   projectName: ${hackathonApp.hack.projectName};
   problemStatement: ${hackathonApp.hack.problemStatement}
   solutionDescription: ${hackathonApp.hack.solutionDescription}
@@ -99,16 +99,21 @@ async function generateHackathonProposal(hackathonApp: HackathonEntry) {
         chatHistory: messages,
     });
 
-    const rawOutput = response.response;
+    console.log(JSON.parse(response.response))
+
+    const rawOutput: AIEvaluation = JSON.parse(response.response);
     return rawOutput;
 }
 
 // Example usage for POST handler or another part of your application
 export async function POST(request: Request) {
     const hackathonApp = await request.json(); // Assuming the request body is properly formatted
-    console.log(hackathonApp);
     const enhancedProposal = await generateHackathonProposal(hackathonApp);
-    console.log(enhancedProposal, "Enhanced Proposal");
+
+
+    hackathonApp.eval.push(enhancedProposal);
+
+    const stringifiedHackathonApp = JSON.stringify(hackathonApp);
 
 
     // Proceed with storing the enhanced proposal in MongoDB or returning it in the response
@@ -118,17 +123,20 @@ export async function POST(request: Request) {
 
     // assumed input
 
-    llamaindex(JSON.stringify(enhancedProposal + hackathonApp), hackathonApp.projectId);//should we modify this id?
+    llamaindex(JSON.stringify(stringifiedHackathonApp), hackathonApp.projectId);//should we modify this id?
+
+
 
     await hackCodex.updateOne(
         {
-            _id: hackathonApp.projectId,
+            _id: hackathonApp._id,
             address: hackathonApp.address,
             hack: hackathonApp.hack
         },
         {
             $addToSet: {
                 eval: enhancedProposal,
+                progressUpdates: hackathonApp.progressUpdates[hackathonApp.progressUpdates.length - 1]
             }
         },
         { upsert: true },// this creates new document if none match the filter
@@ -136,5 +144,5 @@ export async function POST(request: Request) {
 
     // Implementation depends on application requirements.
     //
-    return NextResponse.json(enhancedProposal);
+    return NextResponse.json(hackathonApp, { status: 200 })
 }
