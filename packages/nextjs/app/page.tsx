@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { toast } from "react-hot-toast";
 import { useAccount } from 'wagmi';
-import { createHackathonEntry, hackathonEntry } from "~~/app/hackathon"; import { ChartContainer, BarChart } from "@mui/x-charts";
+import { createHackathonEntry, hackathonEntry, updateHackathonEntry } from "~~/app/hackathon"; import { ChartContainer, BarChart } from "@mui/x-charts";
 import ChatSection from "./components/chat-section";
 import { HackathonEntry, HackathonProjectAttributes, AIEvaluation, TeamMember, ProgressUpdate, CodeEntry } from "~~/types/dbSchema";
 import { useSigner } from "~~/utils/wagmi-utils";
@@ -39,7 +39,7 @@ const Home: NextPage = () => {
         losses: "",
         gamePlan: "",
         actionItems: [],
-        code: [] as CodeEntry[],
+        codeSnippets: [] as CodeEntry[],
     });
     const [myProject, setMyProject] = useState<HackathonEntry>({} as HackathonEntry);
     const [techInput, setTechInput] = useState("");
@@ -174,7 +174,7 @@ const Home: NextPage = () => {
         try {
             // Validate or prepare data as needed before submission
             entry.progressUpdates?.push(updateData);
-            const hackEntry: hackathonEntry = await createHackathonEntry(entry);
+            const hackEntry: hackathonEntry = await updateHackathonEntry(entry);
             const res = hackEntry.getProjectInfo()
             setEntry(res);
             toast(`Project Information: ${JSON.stringify(res)}`);
@@ -218,7 +218,7 @@ const Home: NextPage = () => {
         const newCode = { code: codeInput, comment: codeComment, language: codeLanguage }; // Simplify for demonstration
         setUpdateData({
             ...updateData,
-            code: [...updateData.code, newCode],
+            codeSnippets: [...updateData.codeSnippets, newCode],
         });
         setCodeInput("");
         setCodeComment("");
@@ -487,6 +487,10 @@ const Home: NextPage = () => {
                     </BarChart>
                 </div >
                 <li>Evaluation Comments: {entry?.eval[evalIndex]?.evaluationRemarks}</li>
+                <li>Code Snippets: {entry?.eval[evalIndex]?.codeSnippets?.map((snippet: CodeEntry, i: number) => (<>
+                    <li key={i}><strong>{snippet.code}</strong></li>
+                    <li key={i}><strong>{snippet.comment}</strong></li></>
+                ))}</li>
                 <li>Fun Score: {entry?.eval[evalIndex]?.funScore}</li>
                 <li>Innovation Score: {entry?.eval[evalIndex]?.innovationScore}</li>
                 <li>Feasibility: {entry?.eval[evalIndex]?.feasabilityScore}</li>

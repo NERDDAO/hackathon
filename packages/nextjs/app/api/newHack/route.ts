@@ -97,6 +97,7 @@ async function generateHackathonProposal(hackathonApp: HackathonEntry) {
          innovationScore: number;
          funScore: number;
          evaluationRemarks: string;
+        codeSnippets: CodeEntry[];
                 }
             `,
   },
