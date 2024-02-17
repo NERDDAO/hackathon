@@ -1,12 +1,12 @@
 import { Db } from "mongodb";
-import { Evaluation } from "~~/app/hackathon";
+import { AIEvaluation } from "~~/types/dbSchema";
 
 export async function storeEvaluationByProject(
  db: Db,
  projectId: string,
  usedEmbeddings: string[],
  embeddingId: string,
- evaluation: Evaluation,
+ evaluation: AIEvaluation,
 ) {
  const hackCodex = db.collection("hackerUniverse");
  const evaluations = db.collection("evaluations");

@@ -21,7 +21,7 @@ export async function GET(req: Request) {
         aiu = await db
             .collection("hackerUniverse")
             .find({ address: param })
-            .limit(20)
+            .limit(50)
             .toArray();
 
         return NextResponse.json(aiu); // Response to MongoClient

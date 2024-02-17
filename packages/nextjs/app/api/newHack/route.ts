@@ -4,13 +4,17 @@ import { storeEvaluationByProject } from "../metrics/evaluation";
 import { storePrompt } from "../metrics/prompt";
 import { storeUsageByEmbeddingId } from "../metrics/usage";
 // Assumed environme
-import { Document, MongoDBAtlasVectorSearch, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import {
+ ChatMessage,
+ Document,
+ MongoDBAtlasVectorSearch,
+ VectorStoreIndex,
+ storageContextFromDefaults,
+} from "llamaindex";
 import { OpenAI, serviceContextFromDefaults } from "llamaindex";
 import { Db, MongoClient } from "mongodb";
-import { Evaluation } from "~~/app/hackathon";
 // Assuming we've defined or imported types for the Hackathon Application
-//
-import type { HackathonEntry } from "~~/types/dbSchema";
+import type { AIEvaluation, HackathonEntry } from "~~/types/dbSchema";
 
 const url = "mongodb+srv://At0x:r8MzJR2r4A1xlMOA@cluster1.upfglfg.mongodb.net/?retryWrites=true&w=majority";
 
@@ -51,11 +55,11 @@ async function llamaindex(payload: string, id: string) {
 async function runLlamaAndStore(
  db: Db,
  hackathonApp: any,
- enhancedProposal: string,
+ enhancedProposal: AIEvaluation,
  usedEmbeddingIds: string[],
  promptMessages: any,
  promptResponse: any,
- evaluation: Evaluation,
+ evaluation: AIEvaluation,
 ) {
  const projectId = hackathonApp.projectId || hackathonApp.id;
  const { embeddingId } = await llamaindex(JSON.stringify(enhancedProposal + hackathonApp), projectId); //should we modify this id?
@@ -79,15 +83,15 @@ async function runLlamaAndStore(
 
 // Revised function suited for hackathon application data
 async function generateHackathonProposal(hackathonApp: HackathonEntry) {
- const messages: any[] = [
+ const messages: ChatMessage[] = [
   {
    role: "system",
-   content: `You are an AI consultant specializing in hackathon project conceptualization. Given a project name, problem statement, solution description, and technology stack, Ponder on the different aspects of the presented project and give a score for each domain. Use the evaluationRemarks to appraise the projects and compare them to each other. Reply in JSON format using the Eval type.`,
+   content: `You are an AI consultant specializing in hackathon project conceptualization. Given a project name, problem statement, solution description, and technology stack, Ponder on the different aspects of the presented project and give a score for each domain. Use the evaluationRemarks to appraise the projects and compare them to each other. Reply in JSON format using the AIEvaluation type.`,
   },
   {
    role: "assistant",
    content: `
-              type Eval = {
+            type AIEvaluation = {
          coherenceScore: number;
          feasibilityScore: number;
          innovationScore: number;
@@ -99,7 +103,7 @@ async function generateHackathonProposal(hackathonApp: HackathonEntry) {
   {
    role: "user",
    content: `Review the hackathon entry, assign scores and provide evaluation remarks.
-  projectId: ${hackathonApp.projectId};
+  _id: ${hackathonApp._id};
   projectName: ${hackathonApp.hack.projectName};
   problemStatement: ${hackathonApp.hack.problemStatement}
   solutionDescription: ${hackathonApp.hack.solutionDescription}
@@ -140,7 +144,7 @@ async function generateHackathonProposal(hackathonApp: HackathonEntry) {
  });
  const usedEmbeddingIds = response.sourceNodes?.map(node => node.id_) || [];
  const parsedResponse = JSON.parse(response.response);
- const evaluation = {
+ const evaluation: AIEvaluation = {
   coherenceScore: parsedResponse.coherenceScore,
   feasibilityScore: parsedResponse.feasibilityScore,
   innovationScore: parsedResponse.innovationScore,
@@ -148,7 +152,7 @@ async function generateHackathonProposal(hackathonApp: HackathonEntry) {
   evaluationRemarks: parsedResponse.evaluationRemarks,
  };
 
- const rawOutput = response.response;
+ const rawOutput: AIEvaluation = JSON.parse(response.response);
  return { enhancedProposal: rawOutput, messages, response: parsedResponse, usedEmbeddingIds, evaluation };
 }
 
@@ -160,7 +164,9 @@ export async function POST(request: Request) {
   const { enhancedProposal, usedEmbeddingIds, messages, response, evaluation } = await generateHackathonProposal(
    hackathonApp,
   );
-  console.log(enhancedProposal, "Enhanced Proposal");
+  hackathonApp.eval.push(enhancedProposal);
+
+  const stringifiedHackathonApp = JSON.stringify(hackathonApp);
 
   // Proceed with storing the enhanced proposal in MongoDB or returning it in the response
   //
@@ -172,13 +178,14 @@ export async function POST(request: Request) {
 
   await hackCodex.updateOne(
    {
-    id: hackathonApp.projectId,
+    _id: hackathonApp._id,
     address: hackathonApp.address,
     hack: hackathonApp.hack,
    },
    {
     $addToSet: {
      eval: enhancedProposal,
+     progressUpdates: hackathonApp.progressUpdates[hackathonApp.progressUpdates.length - 1],
     },
    },
    { upsert: true }, // this creates new document if none match the filter
@@ -186,7 +193,9 @@ export async function POST(request: Request) {
 
   // Implementation depends on application requirements.
   //
-  return NextResponse.json(enhancedProposal);
+  return NextResponse.json(hackathonApp, { status: 200 });
+  // Implementation depends on application requirements.
+  //
  } catch (e: any) {
   console.error(e);
   return NextResponse.json({ error: e.message || "An error occurred processing the request" }, { status: 500 });
