@@ -39,7 +39,7 @@ export type HackathonProjectAttributes = {
 
 export type AIEvaluation = {
     coherenceScore: number;
-    feasabilityScore: number;
+    feasibilityScore: number;
     innovationScore: number;
     funScore: number;
     evaluationRemarks: string;

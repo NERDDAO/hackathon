@@ -27,7 +27,8 @@ export default function ChatSection() {
     }, [messages, data]);
 
     return (
-        <div className="space-y-4 max-w-5xl w-[500px]">
+        <div className={`relative bg-[url(/assets/chatFrame.png)] bg-no-repeat bg-contain ml-72 mb-4 right-14 mt-0 p-12 w-11/12 max-h-1/3 h-1/3 max-w-full  flex flex-col items-center`}>
+
             <ChatMessages
                 messages={transformedMessages}
                 isLoading={isLoading}
@@ -41,6 +42,8 @@ export default function ChatSection() {
                 isLoading={isLoading}
                 multiModal={process.env.NEXT_PUBLIC_MODEL === "gpt-4-vision-preview"}
             />
+
         </div>
+
     );
 }

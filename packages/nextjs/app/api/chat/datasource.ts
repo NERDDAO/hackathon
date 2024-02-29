@@ -4,6 +4,7 @@ import {
     MongoDBAtlasVectorSearch,
     ServiceContext,
     SimpleDocumentStore,
+    PDFReader
 } from "llamaindex";
 import { MongoClient } from "mongodb";
 const url = process.env.MONGODB_URL || 'mongodb+srv://At0x:r8MzJR2r4A1xlMOA@cluster1.upfglfg.mongodb.net/?retryWrites=true&w=majority'
@@ -14,6 +15,7 @@ console.log('Connected successfully to server');
 const dbName = 'aiUniverse';
 const indexName = "hacker_index"
 const collectionName = "hackerIndex"
+
 
 export async function getDataSource(
     serviceContext: ServiceContext,

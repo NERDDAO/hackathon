@@ -14,6 +14,7 @@ import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
 import { HackathonEntry } from "~~/types/dbSchema";
+import Frame from "./assets/Frame";
 //import { EAS } from "@ethereum-attestation-service/eas-sdk";
 
 const useHasHydrated = () => {
@@ -43,10 +44,10 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <>
-            <div className="flex flex-col min-h-screen">
-                <Header />
-                <main className="relative flex flex-col flex-1">{children}</main>
-                <Footer />
+            <div className="flex flex-col min-h-screen max-w-screen bg-black z-20">
+
+                <main className="relative flex flex-col flex-1 ">{children}</main>
+
             </div>
             <Toaster />
         </>

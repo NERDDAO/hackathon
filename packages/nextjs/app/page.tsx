@@ -3,6 +3,7 @@
 // Import necessary hooks and libraries
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
+import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { useAccount } from 'wagmi';
 import { createHackathonEntry, hackathonEntry, updateHackathonEntry } from "~~/app/hackathon"; import { ChartContainer, BarChart } from "@mui/x-charts";
@@ -11,6 +12,13 @@ import { HackathonEntry, HackathonProjectAttributes, AIEvaluation, TeamMember, P
 import { useSigner } from "~~/utils/wagmi-utils";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 // Define types for your state
+import Frame from "~~/components/assets/Frame"
+import AIComponent from "~~/components/assets/AIComponent";
+import InputFields from "~~/components/assets/InputFields";
+import PageBar from "~~/components/assets/PageBar";
+import StuffDisplay from "~~/components/assets/StuffDisplay";
+import NavBar from "~~/components/assets/NavBar";
+import { Header } from "~~/components/Header";
 
 const Home: NextPage = () => {
     const { address } = useAccount();
@@ -24,7 +32,7 @@ const Home: NextPage = () => {
         solutionDescription: "",
         implementationDescription: "",
         technologyStack: [],
-    } as HackathonProjectAttributes)
+    })
     const [entry, setEntry] = useState<HackathonEntry>({
         address: address || "",
         _id: "",
@@ -63,6 +71,11 @@ const Home: NextPage = () => {
         setMyProject(res[res.length - 1]);
         setEvals(res[res.length - 1].eval);
         console.log(res);
+    };
+
+    const embedCall = async () => {
+        const data = await fetch(`api/mongoUpload`)
+        console.log(data);
     };
 
     const indexHandler = () => {
@@ -256,7 +269,7 @@ const Home: NextPage = () => {
     const renderSubmitTab = () => {
         return (
             <div
-                className={"flex flex-row w-1/2 p-6"}
+                className={"flex flex-row w-full"}
             >
                 <div className={"flex flex-col"}>
                     SUBMIT YOUR PROJECT<br />
@@ -297,7 +310,6 @@ const Home: NextPage = () => {
                         placeholder="Add Technology"
                     />
 
-                    <button onClick={handleAddTech}>Add Tech</button><br />
 
                 </div>
                 {/* Tech Input */}
@@ -322,13 +334,10 @@ const Home: NextPage = () => {
                         className={"text-black"}
                         placeholder="Add Team Member Role"
                     />
-                    <button onClick={handleAddTeamMember}>Add Member</button>
-                    <br />
-                    {/* Submit Button */}
-                    <button className={"border-2 text-xl"} onClick={handleSubmit}>
-                        Submit
-                    </button>
+
+
                 </div>
+
             </div>
         );
     };
@@ -336,7 +345,7 @@ const Home: NextPage = () => {
     const renderUpdateTab = () => {
         return (
             <div
-                className={"flex flex-row w-1/2 p-6"}
+                className={"flex flex-row w-1/2 h-1/3 p-6"}
             >
                 <div className={"flex flex-col"}>
                     PROGRESS UPDATE<br />
@@ -405,7 +414,7 @@ const Home: NextPage = () => {
                     <button onClick={handleAddCode}>Add Code</button>
                     <br />
                     {/* Submit Button */}
-                    <button className={"border-2 text-xl"} onClick={handleSubmitUpdate}>
+                    <button className={"text-xl"} onClick={handleSubmitUpdate}>
                         Submit
                     </button>
                 </div>
@@ -425,16 +434,18 @@ const Home: NextPage = () => {
     const ProjectDetails = ({ entry, evalIndex }: { entry: any, evalIndex: number }) =>
 
     (
+
         <div
-            className={"text-justify items-left p-6 flex flex-row h-800 w-full"}
+            className={"flex flex-row w-[250px] h-[300px] p-4"}
         >
+
             <div
-                className={"flex flex-col w-full"}
+                className={"border-8 p-0 bg-white text-justify items-left top-6 flex border-green-300 flex-row h-3/4 w-64 overflow-auto"}
             >
-                <span className={"text-2xl font-bold"}><strong>
-                    Project Details:<br /><button onClick={() => indexHandler()}>Next Entry</button><br />
-                    {entry?.hack?.projectName}</strong></span>
                 <ul>
+                    <span className={"bg-white left-20 text-2xl font-bold"}><strong>
+                        Project Details:<br /><br />
+                        {entry?.hack?.projectName}</strong></span>
                     <li>Description: <strong>{entry?.hack?.problemStatement}</strong></li>
                     <li>Solution: <strong> {entry?.hack?.solutionDescription}</strong></li>
                     <li>Implementation: <strong> {entry?.hack?.implementationDescription}</strong></li>
@@ -445,7 +456,6 @@ const Home: NextPage = () => {
                     </ul>
                 </ul>
 
-                <EvaluationDetails entry={entry} evalIndex={evalIndex} />
 
 
             </div>
@@ -465,61 +475,113 @@ const Home: NextPage = () => {
         ];
         const uData = [
             entry?.eval[evalIndex]?.coherenceScore,
-            entry?.eval[evalIndex]?.feasabilityScore,
+            entry?.eval[evalIndex]?.feasibilityScore,
             entry?.eval[evalIndex]?.innovationScore,
             entry?.eval[evalIndex]?.funScore
         ];
         return (
-            <ul
-                className={"relative border-4 -backdrop-hue-rotate-180 p-20 overflow-auto"}
-            >
-                <div
-                    className={"ml-20"}>
-                    <BarChart
-                        className={"ml-12"}
-                        width={500}
-                        height={300}
-                        series={[{ data: uData, label: 'AIscore', type: 'bar' }]}
-                        yAxis={[{ scaleType: 'band', data: xLabels }]}
-                        xAxis={[{ min: 0, max: 10 }]}
-                        layout="horizontal"
-                    >
-                    </BarChart>
-                </div >
-                <li>Evaluation Comments: {entry?.eval[evalIndex]?.evaluationRemarks}</li>
-                <li>Code Snippets: {entry?.eval[evalIndex]?.codeSnippets?.map((snippet: CodeEntry, i: number) => (<>
-                    <li key={i}><strong>{snippet.code}</strong></li>
-                    <li key={i}><strong>{snippet.comment}</strong></li></>
-                ))}</li>
-                <li>Fun Score: {entry?.eval[evalIndex]?.funScore}</li>
-                <li>Innovation Score: {entry?.eval[evalIndex]?.innovationScore}</li>
-                <li>Feasibility: {entry?.eval[evalIndex]?.feasabilityScore}</li>
-                <li>Coherence Score: {entry?.eval[evalIndex]?.coherenceScore}</li>
 
-            </ul>
+            <div
+                className="flex flex-row overflow-x-show fixed h-1/4 bg-no-repeat w-[125%]"
+            >
+                <ProjectDetails entry={entry} evalIndex={evalIndex} />
+                <div>
+                    <div
+                        className={"border-4 p-4 bg-white h-1/2 w-1/2 -backdrop-hue-rotate-180 overflow-auto"}
+                    >
+                        <li>Evaluation Comments: {entry?.eval[evalIndex]?.evaluationRemarks}</li>
+                        <li>Code Snippets: {entry?.eval[evalIndex]?.codeSnippets?.map((snippet: CodeEntry, i: number) => (<>
+                            <li key={i}><strong>{snippet.code}</strong></li>
+                            <li key={i}><strong>{snippet.comment}</strong></li></>
+                        ))}</li>
+                        <li>Fun Score: {entry?.eval[evalIndex]?.funScore}</li>
+                        <li>Innovation Score: {entry?.eval[evalIndex]?.innovationScore}</li>
+                        <li>Feasibility: {entry?.eval[evalIndex]?.feasabilityScore}</li>
+                        <li>Coherence Score: {entry?.eval[evalIndex]?.coherenceScore}</li>
+                    </div>
+
+                    <div className="relative">
+                        <BarChart
+                            width={300}
+                            height={200}
+                            series={[{ data: uData, label: 'AIscore', type: 'bar' }]}
+                            yAxis={[{ scaleType: 'band', data: xLabels }]}
+                            xAxis={[{ min: 0, max: 10 }]}
+                            layout="horizontal"
+                        />
+                    </div>
+
+                </div >
+
+
+
+            </div >
         )
     };
 
     // Render form (simplified for demonstration)
     return (
+        <div className="relative w-1vw h-1.5vh bg-black p-2 left-0">
+            <Image src="/assets/background.png" alt="" fill />
 
 
-        <div className={"relative top-0 h-[700px] w-full border-2 -backdrop-hue-rotate-0 flex flex-row"}>
+            <div className={"left-2 p-8 relative flex flex-col top-2 w-full h-[150%]"}>
 
-            <ProjectDetails entry={entry} evalIndex={evalIndex} />
-            <div className={"flex flex-col"}>
+                <Header />
+                <div className={"flex flex-wrap relative right-32 -top-2 text-white space-x-2 self-center"}>
+                    <button className={"relative h-[50px] w-[150px] text-black cursor-pointer bg-no-repeat bg-[url(/assets/button.png)]"} onClick={() => setActiveTab('submit')}>
+                        <label
+                            className="relative p-4 right-5"
+                        > Submit
+                        </label>
+                    </button>
+                    <button className={"relative h-[50px] w-[150px] text-black cursor-pointer bg-no-repeat bg-[url(/assets/button.png)]"} onClick={() => setActiveTab('update')}>
+                        <label
+                            className="relative p-4 right-5"
+                        > Update
+                        </label>
+                    </button>
 
-
-                <div className={"p-6 space-x-2 bg-black text-white"}>
-                    <button className={"border-2 cursor-pointer"} onClick={() => setActiveTab('submit')}>Submit Project</button>
-                    <button onClick={() => setActiveTab('update')}>Update Project</button>
-                    <button onClick={() => setActiveTab('browse')}>Browse Database</button>
                 </div>
 
+                <div className={"top-8 relative flex flex-row self-center"}>
+                    <div className={"relative top-24 left-24 p-2 h-[100%] w-full backdrop-hue-rotate-0 flex flex-col"}>
 
-                {renderTabContent()}
+                        <EvaluationDetails entry={entry} evalIndex={evalIndex} />
 
-                <div className={"flex flex-col w-full"}>
+                        <div className="-bottom-80 -left-4 relative w-full ">
+                            <ul className="left-40 relative flex flex-row align-middle bottom-12"><button className=" w-[120px] h-[50px] bg-no-repeat bg-[url(/assets/btn.png)]" onClick={() => evalHandler()}></button><span className="relative top-6">Next||Prev</span><button className="bottom-20 w-[120px] h-[50px] bg-no-repeat bg-[url(/assets/btn.png)]" onClick={() => evalHandler()}>
+                            </button>
+                            </ul>
+
+                            <div
+                                className="bg-[url(/assets/banner2.png)] bg-contain bg-no-repeat relative bottom-12 flex flex-auto">
+
+
+                                {renderTabContent()}
+                                <ul
+                                    className="relative left-24"
+                                >
+                                    <button onClick={handleAddTeamMember}>Add Member</button>
+                                    <br />
+                                    {/* Submit Button */}
+                                    <button className={"bg-[url(/assets/submit.png)] bg-contain relative bg-no-repeat text-xl w-1/2 h-1/2"} onClick={handleSubmit}>
+                                        submit
+                                    </button>
+
+                                    <button onClick={handleAddTech}>Add Tech</button><br />
+                                </ul></div>
+
+                        </div>
+
+                    </div>
+
+                    <div className="bg- relative h-1/4">
+                        <button
+                            className="absolute align-middle bottom-0 w-1/4 h-1/4 bg-no-repeat"
+                            onClick={() => indexHandler()}>Next Entry</button>
+
+                    </div>
 
                     <ChatSection />
 
@@ -527,9 +589,11 @@ const Home: NextPage = () => {
                 </div>
 
 
+
             </div>
+
         </div>
+
     );
 };
-
 export default Home;
