@@ -241,6 +241,7 @@ const Home: NextPage = () => {
         const { name, value } = e.target;
         setHackathonProject({ ...hackathonProject, [name]: value });
     };
+    
     // Handlers for tech stack and team members
     const handleAddTech = () => {
         if (!techInput) return; // Prevent adding empty values
@@ -250,6 +251,7 @@ const Home: NextPage = () => {
         });
         setTechInput(""); // Reset input
     };
+
     // ProjectDetails.js
     //
     const renderTabContent = () => {
@@ -264,6 +266,7 @@ const Home: NextPage = () => {
                 return <div>Invalid tab</div>;
         }
     };
+
     const renderSubmitTab = () => {
         return (
             <div

@@ -82,7 +82,7 @@ export const Header = () => {
                         <Image alt="SE2 logo" className="cursor-pointer" fill src="/assets/nerdHouse.png" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-bold leading-tight">NerdHouse-OS</span>
+                        <span className="font-bold leading-tight">NerdDEX</span>
                         <span className="text-xs">Hacker Coordination Tool</span>
                     </div>
                 </Link>
