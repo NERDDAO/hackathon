@@ -522,75 +522,80 @@ const Home: NextPage = () => {
 
     // Render form (simplified for demonstration)
     return (
-        <div className="relative w-1vw h-1.5vh bg-black p-2 left-0">
-            <Image src="/assets/background.png" alt="" fill />
-
-
-            <div className={"left-2 p-8 relative flex flex-col top-2 w-full h-[150%]"}>
-
-                <Header />
-                <div className={"flex flex-wrap relative right-32 -top-2 text-white space-x-2 self-center"}>
-                    <button className={"relative h-[50px] w-[150px] text-black cursor-pointer bg-no-repeat bg-[url(/assets/button.png)]"} onClick={() => setActiveTab('submit')}>
-                        <label
-                            className="relative p-4 right-5"
-                        > Submit
-                        </label>
-                    </button>
-                    <button className={"relative h-[50px] w-[150px] text-black cursor-pointer bg-no-repeat bg-[url(/assets/button.png)]"} onClick={() => setActiveTab('update')}>
-                        <label
-                            className="relative p-4 right-5"
-                        > Update
-                        </label>
-                    </button>
-
+        <div className="relative h-screen w-full bg-black overflow-hidden p-2">
+            {/* Background image */}
+            <Image
+                src="/assets/background.png"
+                alt="Background"
+                layout="fill"             // Esto hace que la imagen llene el contenedor
+                // objectFit="contain"      
+                objectPosition="center"   // Centra la imagen en el contenedor
+            />
+            {/* Content on top of the backgriund image*/}
+            <div className="flex justify-center items-center h-full w-full absolute z-10">
+                <div className="absolute left-[3%] top-[4%] w-[33%]">
+                    <Header />
                 </div>
 
-                <div className={"top-8 relative flex flex-row self-center"}>
-                    <div className={"relative top-24 left-24 p-2 h-[100%] w-full backdrop-hue-rotate-0 flex flex-col"}>
-
-                        <EvaluationDetails entry={entry} evalIndex={evalIndex} />
-
-                        <div className="-bottom-80 -left-4 relative w-full ">
-                            <ul className="left-40 relative flex flex-row align-middle bottom-12"><button className=" w-[120px] h-[50px] bg-no-repeat bg-[url(/assets/btn.png)]" onClick={() => evalHandler()}></button><span className="relative top-6">Next||Prev</span><button className="bottom-20 w-[120px] h-[50px] bg-no-repeat bg-[url(/assets/btn.png)]" onClick={() => evalHandler()}>
-                            </button>
-                            </ul>
-
-                            <div
-                                className="bg-[url(/assets/banner2.png)] bg-contain bg-no-repeat relative bottom-12 flex flex-auto">
-
-
-                                {renderTabContent()}
-                                <ul
-                                    className="relative left-24"
-                                >
-                                    <button onClick={handleAddTeamMember}>Add Member</button>
-                                    <br />
-                                    {/* Submit Button */}
-                                    <button className={"bg-[url(/assets/submit.png)] bg-contain relative bg-no-repeat text-xl w-1/2 h-1/2"} onClick={handleSubmit}>
-                                        submit
-                                    </button>
-
-                                    <button onClick={handleAddTech}>Add Tech</button><br />
-                                </ul></div>
-
-                        </div>
-
-                    </div>
-
-                    <div className="bg- relative h-1/4">
+                <div className='flex absolute left-[30%] top-[17%] gap-10'>
+                    <button className='bg-[url(/assets/button.png)]' onClick={() => setActiveTab('submit')}>
+                        <label className=''> 
+                            Submit
+                        </label>
+                    </button>
+                    <button className='bg-no-repeat bg-[url(/assets/button.png)]' onClick={() => setActiveTab('update')}>
+                        <label className=''> 
+                            Update
+                        </label>
+                    </button>
+                    <div className=''>
                         <button
-                            className="absolute align-middle bottom-0 w-1/4 h-1/4 bg-no-repeat"
-                            onClick={() => indexHandler()}>Next Entry</button>
+                        className=""
+                        onClick={() => indexHandler()}>
+                            Next Entry
+                        </button>
 
                     </div>
-
-                    <ChatSection />
-
-
+                </div>
+                <div className='absolute left-[18%] top-[60%] w-[33%]'>
+                    <ul className=''>
+                        <button className=" w-[120px] h-[50px] bg-no-repeat bg-[url(/assets/btn.png)]" onClick={() => evalHandler()}>
+                        </button>
+                            <span className="relative">Next||Prev</span>
+                        <button className="bottom-20 w-[120px] h-[50px] bg-no-repeat bg-[url(/assets/btn.png)]" onClick={() => evalHandler()}>
+                        </button>
+                    </ul>
                 </div>
 
-
-
+                <div className='absolute left-[7%] top-[27%] w-[33%]'>
+                    <div className=''>
+                        <EvaluationDetails entry={entry} evalIndex={evalIndex} />
+                        
+                    </div>
+                </div>
+                
+                <div className="absolute left-[7%] top-[70%]">
+                    <div className="bg-[url(/assets/banner2.png)] bg-contain bg-no-repeat">
+                        {renderTabContent()}
+                        <ul className=''>
+                            <button onClick={handleAddTeamMember}>
+                                Add Member
+                            </button>
+                            <br />
+                            {/* Submit Button */}
+                            <button className="bg-[url(/assets/submit.png)] bg-contain bg-no-repeat" onClick={handleSubmit}>
+                                submit
+                            </button>
+                            <button onClick={handleAddTech}>
+                                Add Tech
+                            </button>
+                            <br />
+                        </ul>
+                    </div>
+                </div>
+                <div className="absolute right-[7%] top-[27%] w-[33%]">
+                    <ChatSection/>
+                </div>
             </div>
 
         </div>

@@ -35,9 +35,9 @@ export default function ChatMessages(
     }, [messageLength, lastMessage]);
 
     return (
-        <div className="w-full h-3/4 rounded-xl bg-white p-4 shadow-xl pb-0">
+        <div className="w-full rounded-xl bg-white p-4 shadow-xl pb-0">
             <div
-                className="flex h-[50vh] flex-col gap-5 divide-y overflow-y-auto pb-4"
+                className="flex flex-col gap-5 divide-y overflow-y-auto pb-4 h-[45vh] sm:h-[36.5vh] md:h-[40vh] lg:h-[43.5vh] xl:h-[45vh]"
                 ref={scrollableChatContainerRef}
             >
                 {props.messages.map((m) => (

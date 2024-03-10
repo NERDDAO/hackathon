@@ -53,45 +53,28 @@ export const Header = () => {
     );
 
     return (
-        <div className="sticky lg:static top-0 navbar ml-12 bg-opacity-0 min-h-0 flex-shrink-0 justify-between z-20 px-0 sm:px-2">
+        <div className="sticky lg:static top-0 navbar bg-opacity-0 min-h-0 flex-shrink-0 justify-between z-10 px-0 sm:px-2">
             <div className="navbar-start w-auto lg:w-1/2">
-                <div className="lg:hidden dropdown" ref={burgerMenuRef}>
-                    <label
-                        tabIndex={0}
-                        className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
-                        onClick={() => {
-                            setIsDrawerOpen(prevIsOpenState => !prevIsOpenState);
-                        }}
-                    >
-                        <Bars3Icon className="h-1/2" />
-                    </label>
-                    {isDrawerOpen && (
-                        <ul
-                            tabIndex={0}
-                            className="menu menu-compact dropdown-content mt-3 p-2  rounded-box w-52"
-                            onClick={() => {
-                                setIsDrawerOpen(false);
-                            }}
-                        >
-                            <HeaderMenuLinks />
-                        </ul>
-                    )}
-                </div>
-                <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
-                    <div className="flex relative w-10 h-10">
+
+                <Link href="/" passHref className="hidden lg:flex items-center gap-2 shrink-0">
+                    <div className="flex relative w-20 h-20">
                         <Image alt="SE2 logo" className="cursor-pointer" fill src="/assets/nerdHouse.png" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-bold leading-tight">NerdDEX</span>
-                        <span className="text-xs">Hacker Coordination Tool</span>
+                        <span className="font-bold leading-tight text-xs md:text-s lg:text-m xl:text-lg">NerdDEX</span>
+                        <span className="text-xs md:text-xs lg:text-s xl:text-m">Researcher</span>
+                        <span className="text-xs md:text-xs lg:text-s xl:text-m">Coordination Tool</span>
+
                     </div>
                 </Link>
+
                 <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
                     <HeaderMenuLinks />
                 </ul>
-                <div className="ml-20 flex flex-row">
+
+                <div className="flex flex-row absolute sm:top-[00%] md:top-[00%] lg:top-[0%] xl:top-[10%] sm:left-[25%] md:left-[45%] lg:left-[65%] xl:left-[80%] 2xl:left-[87%] 3xl:left-[95%]">
                     <RainbowKitCustomConnectButton />
-                    <FaucetButton />
+                    {/* <FaucetButton /> */}
                 </div>
             </div>
         </div>
