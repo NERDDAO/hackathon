@@ -12,12 +12,6 @@ import { HackathonEntry, HackathonProjectAttributes, AIEvaluation, TeamMember, P
 import { useSigner } from "~~/utils/wagmi-utils";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 // Define types for your state
-import Frame from "~~/components/assets/Frame"
-import AIComponent from "~~/components/assets/AIComponent";
-import InputFields from "~~/components/assets/InputFields";
-import PageBar from "~~/components/assets/PageBar";
-import StuffDisplay from "~~/components/assets/StuffDisplay";
-import NavBar from "~~/components/assets/NavBar";
 import { Header } from "~~/components/Header";
 
 const Home: NextPage = () => {
@@ -62,6 +56,12 @@ const Home: NextPage = () => {
     const [evalIndex, setEvalIndex] = useState<number>(0);
     const [entryIndex, setEntryIndex] = useState<number>(0);
 
+    // web3 config
+    const signer = useSigner();
+    const account = useAccount();
+    const usrAddress = account?.address;
+
+
 
     const dbCall = async () => {
         const data = await fetch(`api/mongo?id=${address}`)
@@ -99,6 +99,8 @@ const Home: NextPage = () => {
         }
         toast.success(`Eval Index: ${evalIndex}`)
     }
+
+    // call db for user
     useEffect(() => {
         if (address == null) return
         dbCall()
@@ -113,10 +115,6 @@ const Home: NextPage = () => {
         const { name, value } = e.target;
         setEntry({ ...entry, [name]: value });
     };
-    const signer = useSigner();
-    const account = useAccount();
-    const usrAddress = account?.address;
-
     const Attest = async (hackName: string) => {
 
         const easContractAddress = "0xbD75f629A22Dc1ceD33dDA0b68c546A1c035c458";
