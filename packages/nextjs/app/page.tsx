@@ -242,7 +242,7 @@ const Home: NextPage = () => {
         const { name, value } = e.target;
         setHackathonProject({ ...hackathonProject, [name]: value });
     };
-    
+
     // Handlers for tech stack and team members
     const handleAddTech = () => {
         if (!techInput) return; // Prevent adding empty values
@@ -441,8 +441,8 @@ const Home: NextPage = () => {
                 <ul>
                     <span className=''>
                         <strong>
-                        Project Details:<br /><br />
-                        {entry?.hack?.projectName}</strong>
+                            Project Details:<br /><br />
+                            {entry?.hack?.projectName}</strong>
                     </span>
                     <li>Description: <strong>{entry?.hack?.problemStatement}</strong></li>
                     <li>Solution: <strong> {entry?.hack?.solutionDescription}</strong></li>
@@ -475,12 +475,13 @@ const Home: NextPage = () => {
         return (
 
             <div className="flex flex-row items-start justify-between relative">
-                <div className="absolute w-[35%] bg-white border-4 p-4 overflow-auto">
+                <div className="absolute w-[35%] bg-white border-4 p-4">
                     <ProjectDetails entry={entry} evalIndex={evalIndex} />
                 </div>
-                <div className="absolute left-[40%] w-[35%]">
+                <div className="absolute left-[40%] w-[35%] p-6 min-h-[300px] h-full overflow-auto">
+                    <span className="text-2xl"> <strong>Evaluation Details:</strong ></span>
                     <div
-                        className={"border-4 p-4 bg-white -backdrop-hue-rotate-180 overflow-auto"}
+                        className={"relative border-4 p-4 bg-white -backdrop-hue-rotate-180"}
                     >
                         <li>Evaluation Comments: {entry?.eval[evalIndex]?.evaluationRemarks}</li>
                         <li>Code Snippets: {entry?.eval[evalIndex]?.codeSnippets?.map((snippet: CodeEntry, i: number) => (<>
@@ -529,56 +530,56 @@ const Home: NextPage = () => {
                     <Header />
                 </div>
 
-                <div className='flex absolute left-[30%] top-[17%] gap-10'>
-                    <button className='bg-[url(/assets/button.png)]' onClick={() => setActiveTab('submit')}>
-                        <label className=''> 
+                <div className='flex absolute left-[25%] top-[12%] gap-10 text-sm'>
+                    <button className='h-[60px] w-[120px] bg-[url(/assets/button.png)]' onClick={() => setActiveTab('submit')}>
+                        <label className=''>
                             Submit
                         </label>
                     </button>
-                    <button className='bg-no-repeat bg-[url(/assets/button.png)]' onClick={() => setActiveTab('update')}>
-                        <label className=''> 
+
+                    <button className='h-[60px] w-[120px] bg-[url(/assets/button.png)]' onClick={() => setActiveTab('update')}>
+                        <label className=''>
                             Update
                         </label>
                     </button>
-                    <div className=''>
-                        <button
-                        className=""
+                    <button
+                        className="relative bottom-6 h-[120px] w-[120px] bg-[url(/assets/nextProject.png)] bg-contain bg-no-repeat"
                         onClick={() => indexHandler()}>
-                            Next Entry
-                        </button>
+                        <label className="relative top-10 left-10 text-sm">Next Entry</label>
+                    </button>
 
-                    </div>
                 </div>
-                <div className='absolute left-[18%] top-[60%] w-[33%]'>
+                <div className='absolute left-[18%] top-[66%] w-[33%]'>
                     <ul className=''>
                         <button className=" w-[120px] h-[50px] bg-no-repeat bg-[url(/assets/btn.png)]" onClick={() => evalHandler()}>
                         </button>
-                            <span className="relative">Next||Prev</span>
+                        <span className="relative">Next||Prev</span>
                         <button className="bottom-20 w-[120px] h-[50px] bg-no-repeat bg-[url(/assets/btn.png)]" onClick={() => evalHandler()}>
                         </button>
                     </ul>
                 </div>
 
                 <div className='absolute left-[6%] top-[29%] w-[52%]'>
-                        <EvaluationDetails entry={entry} evalIndex={evalIndex} /> 
+                    <span className="relative text-2xl -top-14 left-6 text-yellow-500"> <strong>Project: {entry.hack.projectName}</strong ></span>
+                    <EvaluationDetails entry={entry} evalIndex={evalIndex} />
                 </div>
-                
-                <div className="absolute left-[3%] top-[66%] w-[47%] bg-[url(/assets/banner2.png)]  bg-no-repeat bg-cover z-20">
+
+                <div className="absolute left-[1.5%] top-[69%] w-[47%] bg-[url(/assets/banner2.png)]  bg-no-repeat bg-cover z-20">
                     <div className="">
                         {renderTabContent()}
 
                         <div className="flex flex-row relative">
                             <ul className=''>
-                                <button onClick={handleAddTeamMember} className="absolute left-[70%] mt-10 bg-[url(/assets/button.png)]">
-                                    Add Member
+                                <button onClick={handleAddTeamMember} className=" absolute left-[70%] h-[60px] bg-cover bg-no-repeat w-[120px] -mt-10 p-6 text-xs bottom-10 bg-[url(/assets/button.png)]">
+                                    <label className="relative -top-0"> Add Member</label>
                                 </button>
                                 <br />
                                 {/* Submit Button */}
-                                <button className="absolute left-[90%] mt-5 bg-[url(/assets/submit.png)] bg-contain bg-no-repeat" onClick={handleSubmit}>
-                                    submit
+                                <button className="absolute left-[88%] bottom-6 h-[100px] w-[100px] bg-contain mt-5 bg-[url(/assets/submit.png)] bg-no-repeat" onClick={handleSubmit}>
+                                    <label className="relative top-4">submit</label>
                                 </button>
-                                <button onClick={handleAddTech} className="absolute left-[20%] mt-5 bg-[url(/assets/button.png)]">
-                                    Add Tech
+                                <button onClick={handleAddTech} className=" absolute left-[35%] h-[50px] bottom-10 bg-cover bg-no-repeat w-[100px] -mt-10 p-6 text-xs bg-[url(/assets/button.png)]">
+                                    <label className="relative -top-2"> Add Tech</label>
                                 </button>
                                 <br />
                             </ul>
@@ -587,7 +588,7 @@ const Home: NextPage = () => {
                     </div>
                 </div>
                 <div className="absolute right-[7%] top-[28%] w-[33%]">
-                    <ChatSection/>
+                    <ChatSection />
                 </div>
             </div>
 
