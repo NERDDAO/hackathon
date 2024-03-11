@@ -55,7 +55,7 @@ export default function ChatInput(
     };
 
     return (
-        <div className="w-[100%] flex justify-between gap-x-2.5 sm:mt-7 md: mt-4 lg:mt-6 xl:mt-16">
+        <div className="w-[100%] flex justify-between gap-x-2.5">
             <form
                 onSubmit={onSubmit}
             >

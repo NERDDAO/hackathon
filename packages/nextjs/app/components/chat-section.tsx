@@ -27,21 +27,24 @@ export default function ChatSection() {
     }, [messages, data]);
 
     return (
-        <div className='bg-no-repeat'>
+        <div className='relative bg-no-repeat'>
+                <ChatMessages
+                    messages={transformedMessages}
+                    isLoading={isLoading}
+                    reload={reload}
+                    stop={stop}
+                />
+            
+            <div className="absolute w-full bottom-[-15%] sm:bottom-[-30%] md:bottom-[-30%] lg:bottom-[-25%] xl:bottom-[-20%]">
+                    <ChatInput
+                        input={input}
+                        handleSubmit={handleSubmit}
+                        handleInputChange={handleInputChange}
+                        isLoading={isLoading}
+                        multiModal={process.env.NEXT_PUBLIC_MODEL === "gpt-4-vision-preview"}
+                    />
 
-            <ChatMessages
-                messages={transformedMessages}
-                isLoading={isLoading}
-                reload={reload}
-                stop={stop}
-            />
-            <ChatInput
-                input={input}
-                handleSubmit={handleSubmit}
-                handleInputChange={handleInputChange}
-                isLoading={isLoading}
-                multiModal={process.env.NEXT_PUBLIC_MODEL === "gpt-4-vision-preview"}
-            />
+            </div>
 
         </div>
 

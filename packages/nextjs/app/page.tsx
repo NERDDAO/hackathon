@@ -593,7 +593,7 @@ const Home: NextPage = () => {
                         </ul>
                     </div>
                 </div>
-                <div className="absolute right-[7%] top-[27%] w-[33%]">
+                <div className="absolute right-[7%] top-[28%] w-[33%]">
                     <ChatSection/>
                 </div>
             </div>
