@@ -436,24 +436,22 @@ const Home: NextPage = () => {
     const ProjectDetails = ({ entry, evalIndex }: { entry: any, evalIndex: number }) =>
 
     (
-        <div className=''>
-            <div className=''>
+        <div className=" p-6">
+            <ul>
+                <span className=''>
+                    <strong>
+                        Project Details:<br /><br />
+                        {entry?.hack?.projectName}</strong>
+                </span>
+                <li>Description: <strong>{entry?.hack?.problemStatement}</strong></li>
+                <li>Solution: <strong> {entry?.hack?.solutionDescription}</strong></li>
+                <li>Implementation: <strong> {entry?.hack?.implementationDescription}</strong></li>
                 <ul>
-                    <span className=''>
-                        <strong>
-                            Project Details:<br /><br />
-                            {entry?.hack?.projectName}</strong>
-                    </span>
-                    <li>Description: <strong>{entry?.hack?.problemStatement}</strong></li>
-                    <li>Solution: <strong> {entry?.hack?.solutionDescription}</strong></li>
-                    <li>Implementation: <strong> {entry?.hack?.implementationDescription}</strong></li>
-                    <ul>
-                        Technology Stack: {entry?.hack?.technologyStack?.map((tech: string, i: number) => (
-                            <li key={i}><strong>{tech}</strong></li>
-                        ))}
-                    </ul>
+                    Technology Stack: {entry?.hack?.technologyStack?.map((tech: string, i: number) => (
+                        <li key={i}><strong>{tech}</strong></li>
+                    ))}
                 </ul>
-            </div>
+            </ul>
         </div>
     )
 
@@ -475,7 +473,7 @@ const Home: NextPage = () => {
         return (
 
             <div className="flex flex-row items-start justify-between relative">
-                <div className="absolute w-[35%] bg-white border-4 p-4">
+                <div className="absolute w-[35%] bg-white border-4  min-h-[300px] h-full overflow-y-scroll overflow-x-hidden">
                     <ProjectDetails entry={entry} evalIndex={evalIndex} />
                 </div>
                 <div className="absolute left-[40%] w-[35%] p-6 min-h-[300px] h-full overflow-auto">
