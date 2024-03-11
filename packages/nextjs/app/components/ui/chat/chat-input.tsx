@@ -55,7 +55,7 @@ export default function ChatInput(
     };
 
     return (
-        <div className="w-[78.26%] flex justify-between gap-x-2.5 mt-6">
+        <div className="w-[100%] flex justify-between gap-x-2.5 sm:mt-7 md: mt-4 lg:mt-6 xl:mt-16">
             <form
                 onSubmit={onSubmit}
             >
@@ -67,7 +67,7 @@ export default function ChatInput(
                         autoFocus
                         name="message"
                         placeholder="Type a message"
-                        className="flex-1"
+                        className=" flex-1"
                         value={props.input}
                         onChange={props.handleInputChange}
                     />
