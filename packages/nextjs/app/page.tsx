@@ -574,7 +574,7 @@ const Home: NextPage = () => {
                                 </button>
                                 <br />
                                 {/* Submit Button */}
-                                <button className="bg-[url(/assets/submit.png)] bg-contain bg-no-repeat" onClick={handleSubmit}>
+                                <button className="absolute left-[90%] mt-5 bg-[url(/assets/submit.png)] bg-contain bg-no-repeat" onClick={handleSubmit}>
                                     submit
                                 </button>
                                 <button onClick={handleAddTech} className="absolute left-[20%] mt-5 bg-[url(/assets/button.png)]">
