@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 // Import necessary hooks and libraries
@@ -270,9 +271,9 @@ const Home: NextPage = () => {
     const renderSubmitTab = () => {
         return (
             <div
-                className={"flex flex-row w-full"}
+                className={"flex flex-row w-full items-start justify-around"}
             >
-                <div className={"flex flex-col"}>
+                <div className={"flex flex-col mt-10"}>
                     SUBMIT YOUR PROJECT<br />
                     <input
                         name="projectName"
@@ -315,7 +316,7 @@ const Home: NextPage = () => {
                 </div>
                 {/* Tech Input */}
 
-                <div className={"flex flex-col"}>
+                <div className={"flex flex-col mt-10"}>
                     ADD TEAM MEMBERS<br />
                     <input
                         value={teamInput}
@@ -348,7 +349,7 @@ const Home: NextPage = () => {
             <div
                 className={"flex flex-row w-1/2 h-1/3 p-6"}
             >
-                <div className={"flex flex-col"}>
+                <div className={"flex flex-col mt-5"}>
                     PROGRESS UPDATE<br />
                     <input
                         name="progress"
@@ -435,18 +436,14 @@ const Home: NextPage = () => {
     const ProjectDetails = ({ entry, evalIndex }: { entry: any, evalIndex: number }) =>
 
     (
-
-        <div
-            className={"flex flex-row w-[250px] h-[300px] p-4"}
-        >
-
-            <div
-                className={"border-8 p-0 bg-white text-justify items-left top-6 flex border-green-300 flex-row h-3/4 w-64 overflow-auto"}
-            >
+        <div className=''>
+            <div className=''>
                 <ul>
-                    <span className={"bg-white left-20 text-2xl font-bold"}><strong>
+                    <span className=''>
+                        <strong>
                         Project Details:<br /><br />
-                        {entry?.hack?.projectName}</strong></span>
+                        {entry?.hack?.projectName}</strong>
+                    </span>
                     <li>Description: <strong>{entry?.hack?.problemStatement}</strong></li>
                     <li>Solution: <strong> {entry?.hack?.solutionDescription}</strong></li>
                     <li>Implementation: <strong> {entry?.hack?.implementationDescription}</strong></li>
@@ -456,12 +453,7 @@ const Home: NextPage = () => {
                         ))}
                     </ul>
                 </ul>
-
-
-
             </div>
-
-
         </div>
     )
 
@@ -482,13 +474,13 @@ const Home: NextPage = () => {
         ];
         return (
 
-            <div
-                className="flex flex-row overflow-x-show fixed h-1/4 bg-no-repeat w-[125%]"
-            >
-                <ProjectDetails entry={entry} evalIndex={evalIndex} />
-                <div>
+            <div className="flex flex-row items-start justify-between relative">
+                <div className="absolute w-[35%] bg-white border-4 p-4 overflow-auto">
+                    <ProjectDetails entry={entry} evalIndex={evalIndex} />
+                </div>
+                <div className="absolute left-[40%] w-[35%]">
                     <div
-                        className={"border-4 p-4 bg-white h-1/2 w-1/2 -backdrop-hue-rotate-180 overflow-auto"}
+                        className={"border-4 p-4 bg-white -backdrop-hue-rotate-180 overflow-auto"}
                     >
                         <li>Evaluation Comments: {entry?.eval[evalIndex]?.evaluationRemarks}</li>
                         <li>Code Snippets: {entry?.eval[evalIndex]?.codeSnippets?.map((snippet: CodeEntry, i: number) => (<>
@@ -501,7 +493,7 @@ const Home: NextPage = () => {
                         <li>Coherence Score: {entry?.eval[evalIndex]?.coherenceScore}</li>
                     </div>
 
-                    <div className="relative">
+                    {/* <div className="relative">
                         <BarChart
                             width={300}
                             height={200}
@@ -510,7 +502,7 @@ const Home: NextPage = () => {
                             xAxis={[{ min: 0, max: 10 }]}
                             layout="horizontal"
                         />
-                    </div>
+                    </div> */}
 
                 </div >
 
@@ -567,30 +559,31 @@ const Home: NextPage = () => {
                     </ul>
                 </div>
 
-                <div className='absolute left-[7%] top-[27%] w-[33%]'>
-                    <div className=''>
-                        <EvaluationDetails entry={entry} evalIndex={evalIndex} />
-                        
-                    </div>
+                <div className='absolute left-[6%] top-[29%] w-[52%]'>
+                        <EvaluationDetails entry={entry} evalIndex={evalIndex} /> 
                 </div>
                 
-                <div className="absolute left-[7%] top-[70%]">
-                    <div className="bg-[url(/assets/banner2.png)] bg-contain bg-no-repeat">
+                <div className="absolute left-[3%] top-[66%] w-[47%] bg-[url(/assets/banner2.png)]  bg-no-repeat bg-cover z-20">
+                    <div className="">
                         {renderTabContent()}
-                        <ul className=''>
-                            <button onClick={handleAddTeamMember}>
-                                Add Member
-                            </button>
-                            <br />
-                            {/* Submit Button */}
-                            <button className="bg-[url(/assets/submit.png)] bg-contain bg-no-repeat" onClick={handleSubmit}>
-                                submit
-                            </button>
-                            <button onClick={handleAddTech}>
-                                Add Tech
-                            </button>
-                            <br />
-                        </ul>
+
+                        <div className="flex flex-row relative">
+                            <ul className=''>
+                                <button onClick={handleAddTeamMember} className="absolute left-[70%] mt-10 bg-[url(/assets/button.png)]">
+                                    Add Member
+                                </button>
+                                <br />
+                                {/* Submit Button */}
+                                <button className="bg-[url(/assets/submit.png)] bg-contain bg-no-repeat" onClick={handleSubmit}>
+                                    submit
+                                </button>
+                                <button onClick={handleAddTech} className="absolute left-[20%] mt-5 bg-[url(/assets/button.png)]">
+                                    Add Tech
+                                </button>
+                                <br />
+                            </ul>
+
+                        </div>
                     </div>
                 </div>
                 <div className="absolute right-[7%] top-[28%] w-[33%]">
