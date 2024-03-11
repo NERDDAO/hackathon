@@ -53,7 +53,7 @@ export const Header = () => {
     );
 
     return (
-        <div className="sticky lg:static top-0 navbar bg-opacity-0 min-h-0 flex-shrink-0 justify-between z-10 px-0 sm:px-2">
+        <div className="sticky lg:static top-0 left-2 navbar bg-opacity-0 min-h-0 flex-shrink-0 justify-between z-10 px-0 sm:px-2">
             <div className="navbar-start w-auto lg:w-1/2">
 
                 <Link href="/" passHref className="hidden lg:flex items-center gap-2 shrink-0">
@@ -62,8 +62,8 @@ export const Header = () => {
                     </div>
                     <div className="flex flex-col">
                         <span className="font-bold leading-tight text-xs md:text-s lg:text-m xl:text-lg">NerdDEX</span>
-                        <span className="text-xs md:text-xs lg:text-s xl:text-m">Researcher</span>
-                        <span className="text-xs md:text-xs lg:text-s xl:text-m">Coordination Tool</span>
+                        <span className="text-xs md:text-xs lg:text-sm xl:text-md">Researcher</span>
+                        <span className="text-xs md:text-xs lg:text-sm xl:text-md">Coordination Tool</span>
 
                     </div>
                 </Link>

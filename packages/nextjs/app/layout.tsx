@@ -6,21 +6,21 @@ import "~~/styles/globals.css";
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : `http://localhost:${process.env.PORT}`;
-const imageUrl = `${baseUrl}/thumbnail.jpg`;
+const imageUrl = `${baseUrl}/assets/desciLogo.png`;
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
     title: {
         default: "NERDEX",
-        template: "%s | Scaffold-ETH 2",
+        template: "%s | NErd Project Coordination",
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description: "Built with PoK technology @DESCIWORLD",
     openGraph: {
         title: {
-            default: "Scaffold-ETH 2 App",
-            template: "%s | Scaffold-ETH 2",
+            default: "NERDEX",
+            template: "%s | NErd Project Coordination",
         },
-        description: "Built with 🏗 Scaffold-ETH 2",
+        description: "Built with PoK technology @DESCIWORLD",
         images: [
             {
                 url: imageUrl,
@@ -31,13 +31,13 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         images: [imageUrl],
         title: {
-            default: "Scaffold-ETH 2",
-            template: "%s | Scaffold-ETH 2",
+            default: "NERDEX",
+            template: "%s | NErd Project Coordination",
         },
-        description: "Built with 🏗 Scaffold-ETH 2",
+        description: "Built with PoK technology @DESCIWORLD",
     },
     icons: {
-        icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],
+        icon: [{ url: "/assets/nerdHouse.png", sizes: "32x32", type: "image/png" }],
     },
 };
 
