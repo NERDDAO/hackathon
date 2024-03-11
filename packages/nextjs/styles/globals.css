@@ -6,7 +6,15 @@
 [data-theme] {
   background: oklch(var(--b2));
 }
-
+@layer base {
+  @font-face {
+    font-family: 'Windows95';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/fonts/W95FA.otf) format('opentype');
+  }
+}
 body {
   min-height: 100vh;
 }
@@ -30,3 +38,7 @@ p {
 .btn.btn-ghost {
   @apply shadow-none;
 }
+
+
+
+

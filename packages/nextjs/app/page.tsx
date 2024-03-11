@@ -513,7 +513,7 @@ const Home: NextPage = () => {
 
     // Render form (simplified for demonstration)
     return (
-        <div className="relative h-screen w-full bg-black overflow-hidden p-2">
+        <div className="font-win relative h-screen w-full bg-black overflow-hidden p-2">
             {/* Background image */}
             <Image
                 src="/assets/background.png"
